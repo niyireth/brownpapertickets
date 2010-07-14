@@ -5,12 +5,14 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "brownpapertickets"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = "Brown Paper tickets API wrapper"
+    gem.description = "Brown Paper tickets API wrapper"
     gem.email = "alvaro@koombea.com"
     gem.homepage = "http://github.com/bbto/brownpapertickets"
     gem.authors = ["Alvaro Insignares"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
+    gem.add_development_dependency "fakeweb", "~> 1.2.0"
+    gem.add_dependency "httparty", ">=0.6.1"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
