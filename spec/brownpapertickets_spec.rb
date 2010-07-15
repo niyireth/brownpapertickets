@@ -57,6 +57,10 @@ describe "Brownpapertickets" do
     lambda {event.save!}.should raise_error(ArgumentError)
   end
   
+  it "should raise a exception that is missing an attr" do
+    lambda {@bpt.events.create({})}.should raise_error(ArgumentError)
+  end
+  
   it "Should save the event" do
     resp = mock("resp")
     resp2 = mock("resp2")
