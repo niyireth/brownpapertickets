@@ -13,6 +13,10 @@ puts "Title: #{event.title}"
 puts "Event id: #{event.event_id}"
 puts "E zip: #{event.e_zip}"
 
+event.e_zip = "hola"
+
+
+puts "E zip: #{event.e_zip}"
 puts "fetching all... this could take a while ..."
 
 events = @bpt.events.all

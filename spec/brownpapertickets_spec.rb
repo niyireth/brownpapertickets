@@ -52,4 +52,48 @@ describe "Brownpapertickets" do
     bpt.title.gsub("\n","").should == 'Nichole Canuso Dance Company Second Annual Benefit Cabaret'
   end
   
+  it "should raise a exception that is missing an attr" do
+    event = @bpt.events.new
+    lambda {event.save!}.should raise_error(ArgumentError)
+  end
+  
+  it "Should save the event" do
+    resp = mock("resp")
+    resp2 = mock("resp2")
+    resp3 = mock("resp3")
+    resp.stub!(:options).and_return({})
+    resp.stub!(:perform).and_return(resp2)
+    resp2.stub!(:response).and_return(resp3)
+    resp3.stub!(:body).and_return(fixture_file('create_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(resp)
+    event = @bpt.events.new
+    event.e_zip = "90210"
+    event.e_name = "Test Event"
+    event.e_city = "Beverly Hills"
+    event.e_state = "CA"
+    event.e_short_description = " this is a test"
+    event.e_description = "this is a test"
+    event.save!
+    event.event_id.should == "120266"
+  end
+  
+  it "Should not save the event and rise a ArgumentError" do
+    resp = mock("resp")
+    resp2 = mock("resp2")
+    resp3 = mock("resp3")
+    resp.stub!(:options).and_return({})
+    resp.stub!(:perform).and_return(resp2)
+    resp2.stub!(:response).and_return(resp3)
+    resp3.stub!(:body).and_return(fixture_file('create_not_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(resp)
+    event = @bpt.events.new
+    event.e_zip = "90210"
+    event.e_name = "Test Event"
+    event.e_city = "Beverly Hills"
+    event.e_state = "CA"
+    event.e_short_description = " this is a test"
+    event.e_description = "this is a test"
+    lambda {event.save!}.should raise_error(ArgumentError)
+  end
+  
 end
