@@ -70,13 +70,7 @@ describe "Brownpapertickets" do
     resp2.stub!(:response).and_return(resp3)
     resp3.stub!(:body).and_return(fixture_file('create_ok.xml'))
     BrownPaperTickets::Httpost.stub!(:new).and_return(resp)
-    event = @bpt.events.new
-    event.e_zip = "90210"
-    event.e_name = "Test Event"
-    event.e_city = "Beverly Hills"
-    event.e_state = "CA"
-    event.e_short_description = " this is a test"
-    event.e_description = "this is a test"
+    event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
     event.save!
     event.event_id.should == "120266"
   end
@@ -90,13 +84,7 @@ describe "Brownpapertickets" do
     resp2.stub!(:response).and_return(resp3)
     resp3.stub!(:body).and_return(fixture_file('create_not_ok.xml'))
     BrownPaperTickets::Httpost.stub!(:new).and_return(resp)
-    event = @bpt.events.new
-    event.e_zip = "90210"
-    event.e_name = "Test Event"
-    event.e_city = "Beverly Hills"
-    event.e_state = "CA"
-    event.e_short_description = " this is a test"
-    event.e_description = "this is a test"
+    event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
     lambda {event.save!}.should raise_error(ArgumentError)
   end
   
