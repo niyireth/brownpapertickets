@@ -5,7 +5,6 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'brownpapertickets')
   :id => "XsIhXp7K8CknZsC"
 }
 @bpt = BrownPaperTickets::Base.new(@valid_attributes[:id],@valid_attributes[:account])
-a="e_zip"
 
 event = @bpt.events.find(106861)
 
@@ -14,6 +13,7 @@ puts "Event id: #{event.event_id}"
 puts "E zip: #{event.e_zip}"
 
 event.e_zip = "hola"
+puts "Live: #{event.live}"
 
 
 puts "E zip: #{event.e_zip}"

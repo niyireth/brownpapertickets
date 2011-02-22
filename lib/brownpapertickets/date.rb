@@ -1,47 +1,44 @@
 require 'hpricot'
 module BrownPaperTickets
- class Event 
+  class Date 
    include HTTParty
-   
    base_uri "https://www.brownpapertickets.com/api2" 
-   
+ 
     attr_reader :attributes, :server_response
-    
-    REQUIRED_ATTR=["e_name","e_city","e_state", "e_short_description", "e_description"]
-    
-    ATTRS=["e_name","e_city","e_state", "e_short_description", "e_description","e_address1","e_address2","e_zip","e_phone","e_web","end_of_event_message",
-            "end_of_sale_message","date_notes","e_notes","keywords","c_name","c_email","c_phone","c_fax","c_address1","c_address2","c_city","c_state","c_zip",
-            "c_country","public", "title","link", "description", "event_id", "tickets_sold"]
-    
+  
+    REQUIRED_ATTR=["begin_time", "end_time", "sales_end", "max_sales"]
+  
+    ATTRS=["begin_time", "end_time", "event_id", "date_id", "sales_end", "max_sales"]
+  
     def initialize(id, account, attributes={})
       @@id       = id
       @@account  = account
       @attributes = attributes
     end
-    
+  
     def new(params={})
-      Event.new(@@id,@@account, params)
+      Event.new(@@id,@@account, params, event_id)
     end
-    
+  
     def all
-      events = Event.get("/eventlist", :query =>{"id" => @@id , "account" => @@account })
-      parsed_event = []
-      events.parsed_response["document"]["event"].each do |event|
-        parsed_event << Event.new(@id,@account, event)
+      dates = Event.get("/datelist", :query =>{"id" => @@id , "account" => @@account})
+      parsed_date = []
+      date.parsed_response["document"]["date"].each do |date|
+        parsed_date << Event.new(@id,@account, date)
       end
       return parsed_event
     end
-    
+  
     def find(event_id)
-      event = Event.get("/eventlist",:query =>{"id" => @@id , "account" => @@account, "event_id" => event_id })
-      @attributes = event.parsed_response["document"]["event"]
+      date = Event.get("/datelist",:query =>{"id" => @@id , "account" => @@account, "event_id" => event_id, "date_id"=>date_id})
+      @attributes = event.parsed_response["document"]["date"]
       return self
     end
-    
+  
     def method_missing(m, *args, &block)
       if ATTRS.include?(m.to_s.gsub("=",""))
         if m.to_s.include?("=")
-          self.attributes[m.to_s.gsub("=","")] = *args.to_s
+          self.attributes[m.to_s.gsub("=","")] = *args.to_s 
         else
           result = self.attributes[m.to_s]
         end
@@ -49,7 +46,7 @@ module BrownPaperTickets
         raise NoMethodError.new("Method missing #{m}")
       end
     end
-    
+  
     def validates_required_attr
       missing_field = []
       REQUIRED_ATTR.each do |attr|
@@ -62,60 +59,51 @@ module BrownPaperTickets
       end
       return true
     end
-    
+  
     #   Response while saving
     # 	300036 - Required variables are missing
   	#   300037 - Unknown error while posting info to DB
   	#   000000 - Success
-    
+  
     def save!
-      if self.event_id.blank?
+      if self.date_id.blank?
         #changeevent
         return false unless validates_required_attr
-        new_save("createevent")
+        new_save("adddate")
       else
         #createevent
-        new_save("changeevent")
+        new_save("changedate")
       end
     end
-      
-    def new_save(param)    
-      body = {"id" => @@id, "account" => @@account}
+    
+    def new_save(param)
+      body = {"id" => @@id, "account" => @@account, "event_id" => event_id}
       query = self.attributes.merge("id" => @@id, "account" => @@account)
       response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/#{param}",:query => query)
       response.options[:body] = query
       st = response.perform
-      xml = Hpricot(st.response.body)
-      
-      if param == "createevent"
-        event_id = (xml/:event_id).inner_html if (xml/:resultcode).inner_html == "000000"
-        process_create_response( (xml/:resultcode).inner_html, event_id)
+      xml = Hpricot(st.response.body)    
+      if param == "adddate"
+        p "algo"*12
+        self.date_id = (xml/:date_id).inner_html if (xml/:resultcode).inner_html == "000000"
+        process_create_response( (xml/:resultcode).inner_html, date_id)
+        p date_id
         p event_id
       else
         process_update_response( (xml/:resultcode).inner_html)
       end
     end  
     
-    def title=(param)
-      self.attributes["e_name"] = param
-      self.attributes["title"]  = param
+    def create(params={})
+      date = Event.new(@@id,@@account, params)
+      date.save!
     end
     
-    def e_name=(param)
-      self.attributes["e_name"] = param
-      self.attributes["title"]  = param
-    end
-      
-    def create(params={})
-      event = Event.new(@@id,@@account, params)
-      event.save!
-    end
-      
     def live
       return true if self.attributes["live"] == "y"
       return false
     end
-    
+  
     def live=(param)
       if param
         self.attributes["live"] = "y"
@@ -123,7 +111,7 @@ module BrownPaperTickets
         self.attributes["live"] = "f"
       end 
     end  
-      
+    
     def public
       return true if self.attributes["public"] == "t"
       return false
@@ -136,7 +124,7 @@ module BrownPaperTickets
         self.attributes["public"] = "n"
       end 
     end  
-    
+  
     # resultcode
     #  	  300049 - Required variables are missing
     # 	  300050 - Unknown error
@@ -145,85 +133,96 @@ module BrownPaperTickets
     #	  	300053 - Required variables are missing
     #	  	300054 - Unable to update event
     #     000000 - Success
-    
+  
     def update_attribute(key, value)
       assign = key.to_s + "="
       self.send(assign,value)
       query = {"id" => @@id, "account" => @@account, key.to_s => value, "event_id" => self.event_id}
-      response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/changeevent",:query => query)
+      response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/changedate",:query => query)
       response.options[:body] = query
       st = response.perform
       xml = Hpricot(st.response.body)
       return process_update_response((xml/:resultcode).inner_html)
     end
-    
+  
     def update_attributes(params)
       params.each do |key, value|
         assign = key.to_s + "="
         self.send(assign,value)
       end
       query = {"id" => @@id, "account" => @@account,  "event_id" => self.event_id}.merge(params)
-      response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/changeevent",:query => query)
+      response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/changedate",:query => query)
       response.options[:body] = query
       st = response.perform
       xml = Hpricot(st.response.body)
       return process_update_response((xml/:resultcode).inner_html)
     end
-    
+  
     def process_update_response(response)
       case response
       when "000000" then
-        @server_response = "success"
+        @server_response = "Success"
         return true
-      when "300049" then
+      when "300055" then
         @server_response = "Required variables are missing"
         return false
-      when "300050" then
+      when "300056" then
         @server_response = "Unknown error"
         return false
-      when "300051" then
+      when "300057" then
         @server_response = "Unable to find event"
         return false
-      when "300052" then
+      when "300058" then
         @server_response = "Event does not belong to account"
         return false
-      when "300053" then
+      when "300059" then
+        @server_response = "Unknown error"
+        return false
+      when "300060" then
+        @server_response = "Unable to find date"
+        return false   
+      when "300061" then
         @server_response = "Required variables are missing"
         return false
-      when "300054" then
-        @server_response = "Unable to update event"
-        return false      
+      when "300062" then
+        @server_response = "Unable to update date"
+        return false   
       else
         @server_response = "Unknown error"
         return false                            
       end
     end
-    
+  
     def process_create_response(response, event_id)
       case response
-      when "000000" then
+      when "0000" then
         self.event_id = event_id
         @server_response = "success"
         return true
-       when "300036" then
-        @server_response = "There are some missing attr"
+       when "300038" then
+        @server_response = "Required variables are missing"
         return false
-      when "300037" then
+      when "300039" then
         @server_response = "Unknown error while posting info to DB"
+        return false
+      when "300040" then
+        @server_response = "Event does not belong to user"
+        return false
+      when "300041" then
+        @server_response = "Unable to add date"
         return false
       else
         @server_response = "Unknown error"
         return false
       end
     end
-    
+  
     def server_response
       @server_response
     end
-    
+  
     def attributes
       @attributes
-    end
-    
+    end 
   end
 end

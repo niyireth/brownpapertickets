@@ -18,6 +18,12 @@ describe "Brownpapertickets" do
       :account => "citizen_client",
       :id => "XsIhXp7K8CknZsC"
     }
+    @resp = mock("resp")
+    @resp2 = mock("resp2")
+    @resp3 = mock("resp3")
+    @resp.stub!(:options).and_return({})
+    @resp.stub!(:perform).and_return(@resp2)
+    @resp2.stub!(:response).and_return(@resp3)
     @bpt = BrownPaperTickets::Base.new(@valid_attributes[:id],@valid_attributes[:account])
   end
   
@@ -54,38 +60,76 @@ describe "Brownpapertickets" do
   
   it "should raise a exception that is missing an attr" do
     event = @bpt.events.new
-    lambda {event.save!}.should raise_error(ArgumentError)
+    event.save!.should  == false
+    event.server_response.blank?.should == false
   end
   
   it "should raise a exception that is missing an attr" do
-    lambda {@bpt.events.create({})}.should raise_error(ArgumentError)
+    @bpt.events.create({}).should == false
   end
   
   it "Should save the event" do
-    resp = mock("resp")
-    resp2 = mock("resp2")
-    resp3 = mock("resp3")
-    resp.stub!(:options).and_return({})
-    resp.stub!(:perform).and_return(resp2)
-    resp2.stub!(:response).and_return(resp3)
-    resp3.stub!(:body).and_return(fixture_file('create_ok.xml'))
-    BrownPaperTickets::Httpost.stub!(:new).and_return(resp)
+    @resp3.stub!(:body).and_return(fixture_file('create_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
     event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
     event.save!
     event.event_id.should == "120266"
   end
   
   it "Should not save the event and rise a ArgumentError" do
-    resp = mock("resp")
-    resp2 = mock("resp2")
-    resp3 = mock("resp3")
-    resp.stub!(:options).and_return({})
-    resp.stub!(:perform).and_return(resp2)
-    resp2.stub!(:response).and_return(resp3)
-    resp3.stub!(:body).and_return(fixture_file('create_not_ok.xml'))
-    BrownPaperTickets::Httpost.stub!(:new).and_return(resp)
+    @resp3.stub!(:body).and_return(fixture_file('create_not_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
     event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
-    lambda {event.save!}.should raise_error(ArgumentError)
+    event.save!.should == false
+  end
+  
+  it "Should update the event with one attr" do
+    @resp3.stub!(:body).and_return(fixture_file('update_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
+    event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
+    event.update_attribute(:e_name, "This Awsome Title").should == true
+    event.server_response.should == "success"
+  end
+  
+  it "Should not update the event with one attr" do
+    @resp3.stub!(:body).and_return(fixture_file('update_not_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
+    event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
+    event.update_attribute(:e_name, "This Awsome Title").should == false
+    event.server_response.should == "Event does not belong to account"
+  end
+  
+  it "Should update the event with few attr" do
+    @resp3.stub!(:body).and_return(fixture_file('update_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
+    event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
+    event.update_attributes({:e_name => "This Awsome Title2",:e_address1 => "Evergreen av 123", :e_phone => "5553335588"}).should == true
+    event.server_response.should == "success"
+  end
+  
+  it "Should not update the event with few attr" do
+    @resp3.stub!(:body).and_return(fixture_file('update_not_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
+    event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
+    event.update_attributes({:e_name => "This Awsome Title2",:e_address1 => "Evergreen av 123", :e_phone => "5553335588"}).should == false
+    event.server_response.should == "Event does not belong to account"
+  end
+  
+  it "Should save the event" do
+    @resp3.stub!(:body).and_return(fixture_file('update_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
+    event = @bpt.events.new("event_id"=> "120266","e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
+    event.title = "hello world"
+    event.save!.should == true
+    event.event_id.should == "120266"
+    event.e_name.should == "hello world"
+  end
+  
+  it "Should not save the event and rise a ArgumentError" do
+    @resp3.stub!(:body).and_return(fixture_file('update_not_ok.xml'))
+    BrownPaperTickets::Httpost.stub!(:new).and_return(@resp)
+    event = @bpt.events.new("e_zip" => "90210", "e_name"=>"test", "e_city"=> "Sprinfield", "e_state"=>"CA", "e_short_description"=>"this is a test", "e_description"=>"this is a test")
+    event.save!.should == false
   end
   
 end

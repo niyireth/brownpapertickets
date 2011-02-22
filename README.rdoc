@@ -1,6 +1,6 @@
 = brownpapertickets
 
-Description goes here.
+Brownpapertickests gem, is a wrapper for Brownpapertickests's service.
 
 == Note on Patches/Pull Requests
  
