@@ -8,6 +8,7 @@ h3. Create an Event
 
 bc. @bpt = BrownPaperTickets::Base.new("brownpaper_id","brownpaper_account")
 event = @bpt.events.new({:e_zip => "90210", :e_name => "super awesome event", :e_city => "Beverly Hills", :e_state => "CA", :e_short_description => "Super Awesome Event!!!", :e_description => "Woodstock was initiated through the efforts of Michael Lang, John Roberts, Joel Rosenman, and Artie Kornfeld. It was Roberts and Rosenman who had the finances."})
+event.save!
 
 
 == Copyright
