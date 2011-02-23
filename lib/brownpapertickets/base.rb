@@ -10,6 +10,8 @@ module BrownPaperTickets
   class Base
     attr_reader :id, :account, :event, :date, :price
     
+    # Needs the brownpapersticker's credentials (id and account),
+    # creates a new instance of event, date and price
     def initialize(id, account)
       @id       = id
       @account  = account
@@ -20,12 +22,15 @@ module BrownPaperTickets
       @price = BrownPaperTickets::Price.new(self.id, self.account)
     end
     
+    # Returns the event
     def events
       @event
     end       
+    # Return the date
     def dates
       @date
     end   
+    # Return the price
     def prices
       @price
     end
