@@ -61,13 +61,21 @@ module BrownPaperTickets
     end
   
     #   Response while saving
-    # 	300036 - Required variables are missing
-  	#   300037 - Unknown error while posting info to DB
-  	#   000000 - Success
+    # 	300042 - Required variables are missing
+    #   300043 - Unknown error while fetching event info from DB
+    #   300044 - Event does not belong to account
+    #   300045 - Unknown error while fetching date info from DB
+    #   300046 - Unable to find date
+    #   300047 - Unable to add price
+    #   0000 - Success.
   
     def save!
-      new_save("addprice")
-      p "save1"*12
+      if self.price_id.blank?
+        return false unless validates_required_attr
+        new_save("addprice")
+      else
+        new_save("changeprice")
+      end
     end
     
     def new_save(param)
@@ -79,10 +87,8 @@ module BrownPaperTickets
       xml = Hpricot(st.response.body)
     
       if param == "addprice"
-        p "algo"*12
         self.price_id = (xml/:price_id).inner_html if (xml/:resultcode).inner_html == "000000"
         process_create_response( (xml/:resultcode).inner_html, price_id)
-        p (xml/:resultcode).inner_html
       else
         process_update_response( (xml/:resultcode).inner_html)
       end
@@ -120,12 +126,13 @@ module BrownPaperTickets
     end  
   
     # resultcode
-    #  	  300049 - Required variables are missing
-    # 	  300050 - Unknown error
-    #	  	300051 - Unable to find event
-    #	  	300052 - Event does not belong to account
-    #	  	300053 - Required variables are missing
-    #	  	300054 - Unable to update event
+    #  	  300063 - Required variables are missing
+    #     300064 - Unable to find event
+    #     300065 - Event does not belong to account
+    #     300066 - Unknown error
+    #     300067 - No such price for this event
+    #     300068 - Required variables are missing
+    #     300069 - Unable to change price
     #     000000 - Success
   
     def update_attribute(key, value)

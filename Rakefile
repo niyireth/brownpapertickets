@@ -7,9 +7,9 @@ begin
     gem.name = "brownpapertickets"
     gem.summary = "Brown Paper tickets API wrapper"
     gem.description = "Brown Paper tickets API wrapper"
-    gem.email = "alvaro@koombea.com"
-    gem.homepage = "http://github.com/bbto/brownpapertickets"
-    gem.authors = ["Alvaro Insignares"]
+    gem.email = ["alvaro@koombea.com", "niyireth.delahoz@koombea.com"]
+    gem.homepage = "http://github.com/niyireth/brownpapertickets"
+    gem.authors = ["Alvaro Insignares", "Niyireth De La Hoz"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
     gem.add_development_dependency "fakeweb", "~> 1.2.0"
     gem.add_dependency "httparty", ">=0.6.1"

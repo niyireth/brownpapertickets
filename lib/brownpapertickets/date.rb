@@ -67,11 +67,9 @@ module BrownPaperTickets
   
     def save!
       if self.date_id.blank?
-        #changeevent
         return false unless validates_required_attr
         new_save("adddate")
       else
-        #createevent
         new_save("changedate")
       end
     end
@@ -84,11 +82,8 @@ module BrownPaperTickets
       st = response.perform
       xml = Hpricot(st.response.body)    
       if param == "adddate"
-        p "algo"*12
         self.date_id = (xml/:date_id).inner_html if (xml/:resultcode).inner_html == "000000"
         process_create_response( (xml/:resultcode).inner_html, date_id)
-        p date_id
-        p event_id
       else
         process_update_response( (xml/:resultcode).inner_html)
       end
