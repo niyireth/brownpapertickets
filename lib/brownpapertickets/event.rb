@@ -26,8 +26,6 @@ module BrownPaperTickets
     def all
       events = Event.get("/eventlist", :query =>{"id" => @@id , "account" => @@account })
       event_sales = Event.get("/eventsales", :query =>{"id" => @@id , "account" => @@account })
-       p "*"*12
-      p event_sales
       parsed_event = []
       events.parsed_response["document"]["event"].each do |event|
         parsed_event << Event.new(@id,@account, event)
@@ -38,8 +36,6 @@ module BrownPaperTickets
     def find(event_id)
       event = Event.get("/eventlist",:query =>{"id" => @@id , "account" => @@account, "event_id" => event_id })
       event_sales=Event.get("/eventsales",:query =>{"id" => @@id , "account" => @@account, "event_id" => event_id })
-      p "*"*12
-      p event_sales
       @attributes = event.parsed_response["document"]["event"]
       return self
     end
@@ -90,8 +86,6 @@ module BrownPaperTickets
       query = self.attributes.merge("id" => @@id, "account" => @@account)
       response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/#{param}",:query => query)
       response1 = BrownPaperTickets::Httpost.new(Net::HTTP::Get, "https://www.brownpapertickets.com/api2/eventsales",:query => query)
-      p "*"*12
-      p response1
       response.options[:body] = query
       st = response.perform
       xml = Hpricot(st.response.body)
