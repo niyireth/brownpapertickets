@@ -10,6 +10,8 @@ bc. $ [sudo] gem install brownpapertickets
 
 h2. Examples
 
+Check the example folder for more details.
+
 h3. Create an Event
 
 bc. @bpt = BrownPaperTickets::Base.new("brownpaper_id","brownpaper_account")
