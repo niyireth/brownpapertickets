@@ -1,6 +1,12 @@
 h1. Brownpapertickets Gem
 
-Brownpapertickests gem, is a wrapper for Brownpapertickests's service.The purpose of this is gem is to behave like ActiveRecord in the creation of an event.
+Brownpapertickests gem, is a wrapper for Brownpapertickests's service. The purpose of this is gem is provide an "ActiveRecord-like" wrapper for create events.
+
+
+h2. Installing
+
+bc. $ [sudo] gem install brownpapertickets
+
 
 h2. Examples
 
@@ -13,4 +19,4 @@ event.save!
 
 h2. Copyright
 
-Copyright (c) 2010 Alvaro Insignares. See LICENSE for details.
+Copyright (c) 2010-2011 Alvaro Insignares. See LICENSE for details.
