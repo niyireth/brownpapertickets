@@ -37,4 +37,4 @@ puts event.save! # You can also user save for update attributes
 
 h2. Copyright
 
-Copyright (c) 2010-2011 Alvaro Insignares. See LICENSE for details.
+Copyright (c) 2010-2011 Alvaro Insignares, Niyireth de la Hoz, Guillermo Iguaran. See LICENSE for details.
