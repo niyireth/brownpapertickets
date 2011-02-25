@@ -23,7 +23,7 @@ module BrownPaperTickets
     def all
       prices = Event.get("/pricelist", :query =>{"id" => @@id , "account" => @@account, "event_id" => event_id , "date_id" => date_id})
       parsed_date = []
-      price.parsed_response["document"]["price"].each do |date|
+      price.parsed_response["document"]["price"].each do |price|
         parsed_date << Event.new(@id,@account, price)
       end
       return parsed_event

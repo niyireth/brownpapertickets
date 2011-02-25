@@ -61,9 +61,11 @@ module BrownPaperTickets
     end
   
     #   Response while saving
-    # 	300036 - Required variables are missing
-  	#   300037 - Unknown error while posting info to DB
-  	#   000000 - Success
+    # 	300038 - Required variables are missing
+  	#   300039 - Unknown error while posting info to DB
+  	#   300040 - Event does not belong to user
+  	#   300041 - Unable to add date
+  	#   0000   - Success
   
     def save!
       if self.date_id.blank?
@@ -121,13 +123,15 @@ module BrownPaperTickets
     end  
   
     # resultcode
-    #  	  300049 - Required variables are missing
-    # 	  300050 - Unknown error
-    #	  	300051 - Unable to find event
-    #	  	300052 - Event does not belong to account
-    #	  	300053 - Required variables are missing
-    #	  	300054 - Unable to update event
-    #     000000 - Success
+    #  	  300055 - Required variables are missing
+    #     300056 - Unknown error
+    #     300057 - Unable to find event
+    #     300058 - Event does not belong to account
+    #     300059 - Unknown error
+    #     300060 - Unable to find date
+    #     300061 - Required variables are missing
+    #     300062 - Unable to update date
+    #     000000 -	Success
   
     def update_attribute(key, value)
       assign = key.to_s + "="
@@ -191,7 +195,7 @@ module BrownPaperTickets
     def process_create_response(response, event_id)
       case response
       when "0000" then
-        self.event_id = event_id
+        self.date_id = date_id
         @server_response = "success"
         return true
        when "300038" then

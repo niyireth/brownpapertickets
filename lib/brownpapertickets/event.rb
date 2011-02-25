@@ -89,9 +89,6 @@ module BrownPaperTickets
       body = {"id" => @@id, "account" => @@account}
       query = self.attributes.merge("id" => @@id, "account" => @@account)
       response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/#{param}",:query => query)
-      response1 = BrownPaperTickets::Httpost.new(Net::HTTP::Get, "https://www.brownpapertickets.com/api2/eventsales",:query => query)
-      p "*"*12
-      p response1
       response.options[:body] = query
       st = response.perform
       xml = Hpricot(st.response.body)
