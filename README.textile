@@ -1,0 +1,40 @@
+h1. Brownpapertickets Gem
+
+Brownpapertickests gem, is a wrapper for Brownpapertickests's service. The purpose of this is gem is provide an "ActiveRecord-like" wrapper for create events.
+
+
+h2. Installing
+
+bc. $ [sudo] gem install brownpapertickets
+
+
+h2. Examples
+
+Check the example folder for more details.
+
+h3. Create an Event
+
+bc. @bpt = BrownPaperTickets::Base.new("brownpaper_id","brownpaper_account")
+event = @bpt.events.new({:e_zip => "90210", :e_name => "super awesome event", :e_city => "Beverly Hills", :e_state => "CA", :e_short_description => "Super Awesome Event!!!", :e_description => "Woodstock was initiated through the efforts of Michael Lang, John Roberts, Joel Rosenman, and Artie Kornfeld. It was Roberts and Rosenman who had the finances."})
+event.save!
+
+h3. Fetch all elements
+
+bc. @bpt = BrownPaperTickets::Base.new("brownpaper_id","brownpaper_account")
+event = @bpt.events.find(id) #get an Event
+events = @bpt.events.all #get all Events
+
+h3. Update an event
+
+bc. @bpt = BrownPaperTickets::Base.new("brownpaper_id","brownpaper_account")
+event = @bpt.events.find(id)
+event.update_attribute(:e_name, "This Awsome Title")   #for only one field
+event.update_attributes({:e_name => "This Awsome Title2",:e_address1 => "Evergreen av 123", :e_phone => "5553335588"}) #for severl fields
+event.e_name = "This Super Awsome Title2"
+event.e_address1 = "Evergreen av 123 nxt to homer"
+event.e_phone = "2365476235"
+puts event.save! # You can also user save for update attributes
+
+h2. Copyright
+
+Copyright (c) 2010-2011 Alvaro Insignares, Niyireth de la Hoz, Guillermo Iguaran. See LICENSE for details.

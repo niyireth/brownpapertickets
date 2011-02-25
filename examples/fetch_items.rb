@@ -1,8 +1,8 @@
 require File.join(File.dirname(__FILE__), '..', 'lib', 'brownpapertickets')
 
 @valid_attributes = {
-  :account => "citizen_client",
-  :id => "XsIhXp7K8CknZsC"
+  :account => "your_account",
+  :id => "your_id"
 }
 @bpt = BrownPaperTickets::Base.new(@valid_attributes[:id],@valid_attributes[:account])
 

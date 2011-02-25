@@ -22,12 +22,10 @@ module BrownPaperTickets
     def new(params={})
       Event.new(@@id,@@account, params)
     end
-    
+    # Returns all the account's events from brownpapersticker
     def all
       events = Event.get("/eventlist", :query =>{"id" => @@id , "account" => @@account })
       event_sales = Event.get("/eventsales", :query =>{"id" => @@id , "account" => @@account })
-       p "*"*12
-      p event_sales
       parsed_event = []
       events.parsed_response["document"]["event"].each do |event|
         parsed_event << Event.new(@id,@account, event)
@@ -35,11 +33,12 @@ module BrownPaperTickets
       return parsed_event
     end
     
+    # This method get an event from brownpapersticker.
+    # The event should belong to the account.
+    # @param [String] envent_id this is id of the event I want to find
     def find(event_id)
       event = Event.get("/eventlist",:query =>{"id" => @@id , "account" => @@account, "event_id" => event_id })
       event_sales=Event.get("/eventsales",:query =>{"id" => @@id , "account" => @@account, "event_id" => event_id })
-      p "*"*12
-      p event_sales
       @attributes = event.parsed_response["document"]["event"]
       return self
     end
