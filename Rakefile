@@ -19,7 +19,7 @@ Rake::RDocTask.new do |rdoc|
   version = BrownPaperTickets::VERSION
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "brownpaperticket #{version}"
+  rdoc.title = "brownpapertickets #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
