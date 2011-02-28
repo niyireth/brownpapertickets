@@ -48,7 +48,7 @@ module BrownPaperTickets
     def create_report
       body = {"id" => @@id, "account" => @@account, "event_id" => event_id}
       query = self.attributes.merge("id" => @@id, "account" => @@account)
-      response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/eventsales",:query => query)
+      response = BrownPaperTickets::Httpost.new(Net::HTTP::Get, "https://www.brownpapertickets.com/api2/eventsales",:query => query)
       p response
       response.options[:body] = query
       st = response.perform
