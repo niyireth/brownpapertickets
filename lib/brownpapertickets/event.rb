@@ -86,19 +86,19 @@ module BrownPaperTickets
       
     def new_save(param)    
       body = {"id" => @@id, "account" => @@account}
+      p @@account
       query = self.attributes.merge("id" => @@id, "account" => @@account)
       response = BrownPaperTickets::Httpost.new(Net::HTTP::Post, "https://www.brownpapertickets.com/api2/#{param}",:query => query)
       response.options[:body] = query
       st = response.perform
       xml = Hpricot(st.response.body)
-      
       if param == "createevent"
-        event_id = (xml/:event_id).inner_html if (xml/:resultcode).inner_html == "000000"
+        self.event_id = (xml/:event_id).inner_html if (xml/:resultcode).inner_html == "000000"
         process_create_response( (xml/:resultcode).inner_html, event_id)
       else
         process_update_response( (xml/:resultcode).inner_html)
       end
-    end  
+    end
     
     def title=(param)
       self.attributes["e_name"] = param

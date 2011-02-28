@@ -92,7 +92,7 @@ module BrownPaperTickets
       else
         process_update_response( (xml/:resultcode).inner_html)
       end
-    end  
+    end
     
     def create(params={})
       price = Event.new(@@id,@@account, params)
