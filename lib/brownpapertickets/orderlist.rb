@@ -6,7 +6,7 @@ module BrownPaperTickets
  
     attr_reader :attributes, :server_response
   
-    REQUIRED_ATTR=["event_id"]
+    REQUIRED_ATTR=["event_id", "date_id", "price_id"]
   
     ATTRS=["event_id", "title", "link", "event_status", "tickets_sold", "collected_value", "paid_value"]
   
