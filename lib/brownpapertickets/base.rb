@@ -20,7 +20,7 @@ module BrownPaperTickets
       @event = BrownPaperTickets::Event.new(self.id, self.account)
       @date = BrownPaperTickets::Date.new(self.id, self.account)
       @price = BrownPaperTickets::Price.new(self.id, self.account)
-      @orderlist = BrownPaperTickets::OrderList.new(self.id, self.account)
+      @orderlist = BrownPaperTickets::Orderlist.new(self.id, self.account)
     end
     
     # Returns the event
