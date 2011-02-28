@@ -73,6 +73,7 @@ module BrownPaperTickets
       if self.price_id.blank?
         return false unless validates_required_attr
         new_save("addprice")
+        p "entro en add price"
       else
         new_save("changeprice")
       end
@@ -87,8 +88,9 @@ module BrownPaperTickets
       xml = Hpricot(st.response.body)
     
       if param == "addprice"
-        self.price_id = (xml/:price_id).inner_html if (xml/:resultcode).inner_html == "000000"
+        price_id = (xml/:price_id).inner_html if (xml/:resultcode).inner_html == "000000"
         process_create_response( (xml/:resultcode).inner_html, price_id)
+        p price_id
       else
         process_update_response( (xml/:resultcode).inner_html)
       end
