@@ -88,7 +88,7 @@ module BrownPaperTickets
       xml = Hpricot(st.response.body)
     
       if param == "addprice"
-        price_id = (xml/:price_id).inner_html if (xml/:resultcode).inner_html == "000000"
+        self.price_id = (xml/:price_id).inner_html if (xml/:resultcode).inner_html == "000000"
         process_create_response( (xml/:resultcode).inner_html, price_id)
         p price_id
       else

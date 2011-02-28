@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    brownpapertickets (0.0.5)
+    brownpapertickets (0.0.6)
       hpricot (>= 0.8.3)
       httparty (>= 0.6.1)
 
