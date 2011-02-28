@@ -49,6 +49,7 @@ module BrownPaperTickets
       body = {"id" => @@id, "account" => @@account, "event_id" => event_id, "date_id"=>date_id, "price_id" => price_id}
       query = self.attributes.merge("id" => @@id, "account" => @@account,"event_id" => event_id, "date_id"=>date_id, "price_id" => price_id )
       response = BrownPaperTickets::Httpost.new(Net::HTTP::Get, "https://www.brownpapertickets.com/api2/orderlist",:query => query)
+      p response
       response.options[:body] = query
       st = response.perform
       xml = Hpricot(st.response.body)
