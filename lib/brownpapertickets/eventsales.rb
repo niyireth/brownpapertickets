@@ -1,6 +1,6 @@
 require 'hpricot'
 module BrownPaperTickets
-  class Orderlist 
+  class EventSales
    include HTTParty
    base_uri "https://www.brownpapertickets.com/api2" 
  
