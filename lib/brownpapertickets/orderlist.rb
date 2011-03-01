@@ -1,6 +1,6 @@
 require 'hpricot'
 module BrownPaperTickets
-  class Eventsales
+  class Orderlist
    include HTTParty
    base_uri "https://www.brownpapertickets.com/api2" 
  
@@ -8,7 +8,9 @@ module BrownPaperTickets
   
     REQUIRED_ATTR=["event_id"]
   
-    ATTRS=["event_id", "title", "link", "event_status", "tickets_sold", "collected_value", "paid_value", "date_id", "price_id"]
+    ATTRS=["event_id", "order_time", "quantity", "fname", "lname", "address", "city", "state", "zip", 
+      "country", "email", "phone","cc","shipping_method","order_notes","ticket_number", "section", "row","seat",
+      "date_id", "price_id"]
   
     def initialize(id, account, attributes={})
       @@id       = id
@@ -48,7 +50,7 @@ module BrownPaperTickets
     def create_report
       body = {"id" => @@id, "account" => @@account, "event_id" => event_id}
       query = self.attributes.merge("id" => @@id, "account" => @@account)
-      response = BrownPaperTickets::Httpost.new(Net::HTTP::Get, "https://www.brownpapertickets.com/api2/eventsales",:query => query)
+      response = BrownPaperTickets::Httpost.new(Net::HTTP::Get, "https://www.brownpapertickets.com/api2/orderlist",:query => query)
       response.options[:body] = query
       st = response.perform
       xml = st.response.body
