@@ -5,7 +5,7 @@ require File.join(File.dirname(__FILE__),  'brownpapertickets/base')
 require File.join(File.dirname(__FILE__),  'brownpapertickets/event')
 require File.join(File.dirname(__FILE__),  'brownpapertickets/date')
 require File.join(File.dirname(__FILE__),  'brownpapertickets/price')
-require File.join(File.dirname(__FILE__),  'brownpapertickets/orderlist')
+require File.join(File.dirname(__FILE__),  'brownpapertickets/eventsales')
 require File.join(File.dirname(__FILE__),  'brownpapertickets/httpost')
 module BrownPaperTickets
 
