@@ -12,7 +12,7 @@ module BrownPaperTickets
     ATTRS=["e_name","e_city","e_state", "e_short_description", "e_description","e_address1","e_address2","e_zip","e_phone","e_web","end_of_event_message",
             "end_of_sale_message","date_notes","e_notes","keywords","c_name","c_email","c_phone","c_fax","c_address1","c_address2","c_city","c_state","c_zip",
             "c_country","public", "title","link", "description", "event_id", "tickets_sold"]
-    
+          
     def initialize(id, account, attributes={})
       @@id       = id
       @@account  = account
