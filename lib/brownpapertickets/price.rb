@@ -8,7 +8,7 @@ module BrownPaperTickets
   
     REQUIRED_ATTR=["price", "price_name"]
   
-    ATTRS=["price", "price_name", "event_id", "date_id", "price_id"]
+    ATTRS=["price", "price_name", "event_id", "date_id", "price_id", "max_sale", "end_time", "start_time"]
   
     def initialize(id, account, attributes={})
       @@id       = id
