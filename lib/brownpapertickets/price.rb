@@ -6,9 +6,9 @@ module BrownPaperTickets
  
     attr_reader :attributes, :server_response
   
-    REQUIRED_ATTR=["price", "price_name", "max_sale", "end_time", "start_time"]
+    REQUIRED_ATTR=["price", "price_name", "max_sales", "end_time", "start_time"]
   
-    ATTRS=["price", "price_name", "event_id", "date_id", "price_id", "max_sale", "end_time", "start_time"]
+    ATTRS=["price", "price_name", "event_id", "date_id", "price_id", "max_sales", "end_time", "start_time"]
   
     def initialize(id, account, attributes={})
       @@id       = id
