@@ -6,7 +6,7 @@ module BrownPaperTickets
  
     attr_reader :attributes, :server_response
   
-    REQUIRED_ATTR=["price", "price_name"]
+    REQUIRED_ATTR=["price", "price_name", "max_sale", "end_time", "start_time"]
   
     ATTRS=["price", "price_name", "event_id", "date_id", "price_id", "max_sale", "end_time", "start_time"]
   
